@@ -17,9 +17,9 @@
    ├── Dockerfile
    ├── docker-compose.yml
    ├── .vscode/
-   │   ├── launch.json
-   │   ├── settings.json
-   └── README.md
+       ├── launch.json
+       ├── settings.json
+
    ```
 
 2. **編寫Flask應用**
