@@ -1,0 +1,97 @@
+運行`docker-compose up --build`命令時，Docker Compose會自動構建映像並啟動容器。如果已經存在映像，這個命令會重新構建它們。以下是詳細的過程：
+
+### 運行`docker-compose up --build`
+
+這個命令會執行以下步驟：
+
+1. **構建映像**：
+   Docker Compose會檢查`docker-compose.yml`文件中定義的服務，並根據`Dockerfile`重新構建所需的Docker映像。
+
+2. **啟動容器**：
+   Docker Compose會基於構建好的映像啟動容器，並配置網絡、卷和環境變量。
+
+### `docker-compose.yml`文件示例
+
+確保你的`docker-compose.yml`文件正確配置，以下是一個示例：
+
+```yaml
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      FLASK_ENV: development
+```
+
+### `Dockerfile`文件示例
+
+確保你的`Dockerfile`正確配置，以下是一個示例：
+
+```Dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app/ app/
+
+EXPOSE 5000
+
+CMD ["python", "app/main.py"]
+```
+
+### 運行命令
+
+在你的項目目錄中運行以下命令來構建映像並啟動容器：
+
+```powershell
+docker-compose up --build
+```
+
+### 檢查運行中的容器
+
+運行容器後，可以使用以下命令檢查運行中的容器：
+
+```powershell
+docker ps
+```
+
+你應該能看到類似如下的輸出，表示容器正在運行：
+
+```
+CONTAINER ID   IMAGE           COMMAND                   CREATED          STATUS          PORTS                    NAMES
+<container_id> flask_app-web   "python app/main.py"      X minutes ago    Up X minutes    0.0.0.0:5000->5000/tcp   flask_app-web-1
+```
+
+### 測試API請求
+
+容器成功運行後，你可以發送API請求來測試應用：
+
+```powershell
+curl.exe -X POST http://localhost:5000/square -H "Content-Type: application/json" -d "{\"number\": 4}"
+```
+
+或使用`Invoke-RestMethod`：
+
+```powershell
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
+$body = @{
+    "number" = 4
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:5000/square -Method Post -Headers $headers -Body $body
+```
+
+### 總結
+
+通過運行`docker-compose up --build`命令，Docker Compose會自動構建映像並啟動容器。確保你的`docker-compose.yml`和`Dockerfile`配置正確，並使用命令行或API測試工具來測試應用的運行情況。如果有任何問題或需要進一步的幫助，請提供具體的錯誤信息或日誌，我會進一步幫助你。
